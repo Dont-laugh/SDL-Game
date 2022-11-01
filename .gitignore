@@ -1,0 +1,10 @@
+.vs/
+.vscode/
+.idea/
+.clion/
+bin/
+bin-int/
+
+*.sln
+*.vcxproj
+*.vcxproj.user
