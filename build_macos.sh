@@ -1,2 +1,2 @@
 #!/bin/bash
-premake5 xcode4
+./Premake/premake5 xcode4
