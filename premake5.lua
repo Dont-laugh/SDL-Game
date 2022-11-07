@@ -33,12 +33,6 @@ project "Engine"
         sdl_lib,
     }
 
-    links
-    {
-        "SDL2",
-        "SDL2main",
-    }
-
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"
@@ -50,6 +44,7 @@ project "Engine"
 
     filter "system:Windows"
         systemversion "latest"
+        links { "SDL2", "SDL2main" }
         postbuildcommands
         {
             "{COPY} ../" .. sdl_lib .. "/SDL2.dll ../bin/" .. outputdir .. "/%{prj.name}"
