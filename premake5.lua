@@ -25,7 +25,7 @@ project "Engine"
     includedirs
     {
         "SDL2/include",
-        "%{prj.name}/src/include",
+        "%{prj.name}/include",
     }
 
     libdirs
