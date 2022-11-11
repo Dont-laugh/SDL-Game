@@ -1,2 +1,1 @@
-#!/bin/bash
-./Premake/premake5 xcode4
+xmake project -k xcode -a "x64"
