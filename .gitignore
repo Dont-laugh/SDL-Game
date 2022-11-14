@@ -18,3 +18,7 @@ vsxmake**/
 .DS_Store
 *.xcworkspace
 *.xcodeproj
+
+# CMake files
+CMake**
+cmake_install.cmake
