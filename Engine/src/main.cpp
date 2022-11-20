@@ -1,16 +1,21 @@
-#include "SDL.h"
+#include "Game.hpp"
+
+DontLaugh::Game* g_Game = nullptr;
 
 int main(int arg, char* argv[])
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
+	g_Game = new DontLaugh::Game();
+	g_Game->Init("2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false);
 
-	SDL_Window* window = SDL_CreateWindow("Demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_INPUT_FOCUS);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+	while (g_Game->Running())
+	{
+		g_Game->HandleEvents();
+		g_Game->Update();
+		g_Game->Render();
+	}
 
-	SDL_SetRenderDrawColor(renderer, 0, 225, 128, 240);
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
-	SDL_Delay(3000);
+	g_Game->Clean();
+	delete g_Game;
 
 	return 0;
 }
