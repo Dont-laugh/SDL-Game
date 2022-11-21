@@ -7,7 +7,7 @@ int main(int arg, char* argv[])
 	g_Game = new DontLaugh::Game();
 	g_Game->Init("2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false);
 
-	while (g_Game->Running())
+	while (g_Game->IsRunning())
 	{
 		g_Game->HandleEvents();
 		g_Game->Update();

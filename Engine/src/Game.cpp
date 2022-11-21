@@ -4,6 +4,12 @@
 
 namespace DontLaugh
 {
+	const char* windowTitle;
+
+	Game::Game()
+	{
+	}
+
 	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
 		Init(title, xPos, yPos, width, height, fullScreen);
@@ -29,6 +35,8 @@ namespace DontLaugh
 			return;
 		}
 
+		windowTitle = title;
+
 		m_Window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
 		if (m_Window)
 		{
@@ -44,7 +52,11 @@ namespace DontLaugh
 			std::cout << "SDL renderer created." << std::endl;
 		}
 
+		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
+
+		m_TitleStream.setf(std::ios::fixed);
+		m_TitleStream.precision(1);
 	}
 
 	void Game::HandleEvents()
@@ -65,7 +77,19 @@ namespace DontLaugh
 	void Game::Update()
 	{
 		++m_FrameCount;
-		std::cout << m_FrameCount << std::endl;
+		Uint64 currTime = SDL_GetTicks();
+
+		if (currTime - m_LastTime > s_FpsInterval)
+		{
+			float fps = (m_FrameCount - m_LastCount) * 1000.0f / (currTime - m_LastTime);
+
+			m_TitleStream.str("");
+			m_TitleStream << windowTitle << " FPS: " << fps;
+			SDL_SetWindowTitle(m_Window, m_TitleStream.str().c_str());
+
+			m_LastCount = m_FrameCount;
+			m_LastTime = currTime;
+		}
 	}
 
 	void Game::Render()
