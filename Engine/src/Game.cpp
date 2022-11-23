@@ -30,8 +30,7 @@ namespace DontLaugh
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		{
 			m_IsRunning = false;
-			SDL_LogDebug(SDL_LOG_CATEGORY_ERROR, "SDL initialize failed!");
-			std::cerr << "SDL initialize failed!" << std::endl;
+			SDL_LogError(SDL_LOG_CATEGORY_SYSTEM, "SDL initialize failed!");
 			return;
 		}
 
@@ -40,17 +39,19 @@ namespace DontLaugh
 		m_Window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
 		if (m_Window)
 		{
-			SDL_LogDebug(SDL_LOG_CATEGORY_SYSTEM, "SDL window created.");
-			std::cout << "SDL window created." << std::endl;
+			SDL_Log("SDL window created.");
 		}
 
 		m_Renderer = SDL_CreateRenderer(m_Window, -1, 0);
 		if (m_Renderer)
 		{
 			SDL_SetRenderDrawColor(m_Renderer, 151, 255, 255, 200);
-			SDL_LogDebug(SDL_LOG_CATEGORY_SYSTEM, "SDL renderer created.");
-			std::cout << "SDL renderer created." << std::endl;
+			SDL_Log("SDL renderer created.");
 		}
+
+		SDL_Surface* tmpSurface = IMG_Load("assets/player.png");
+		m_PlayerTex = SDL_CreateTextureFromSurface(m_Renderer, tmpSurface);
+		SDL_FreeSurface(tmpSurface);
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -84,7 +85,7 @@ namespace DontLaugh
 			float fps = (m_FrameCount - m_LastCount) * 1000.0f / (currTime - m_LastTime);
 
 			m_TitleStream.str("");
-			m_TitleStream << windowTitle << " FPS: " << fps;
+			m_TitleStream << windowTitle << " (FPS: " << fps << ")";
 			SDL_SetWindowTitle(m_Window, m_TitleStream.str().c_str());
 
 			m_LastCount = m_FrameCount;
@@ -96,6 +97,7 @@ namespace DontLaugh
 	{
 		SDL_RenderClear(m_Renderer);
 		// Add stuff to render
+		SDL_RenderCopy(m_Renderer, m_PlayerTex, nullptr, nullptr);
 		SDL_RenderPresent(m_Renderer);
 	}
 
@@ -110,7 +112,6 @@ namespace DontLaugh
 
 		m_IsCleaned = true;
 
-		SDL_LogDebug(SDL_LOG_CATEGORY_SYSTEM, "Game cleaned.");
-		std::cout << "Game cleaned." << std::endl;
+		SDL_Log("Game cleaned.");
 	}
-}
+} // namespace DontLaugh

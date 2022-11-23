@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "SDL.h"
+#include "SDL_image.h"
 
 namespace DontLaugh
 {
@@ -26,7 +27,7 @@ namespace DontLaugh
 		bool m_IsCleaned{ false };
 
 		// ---------- FPS ----------
-		const Uint64 s_FpsInterval{ 500 };
+		static const Uint64 s_FpsInterval{ 500 };
 		Uint32 m_FrameCount{ 0 };
 		Uint32 m_LastCount{ 0 };
 		Uint64 m_LastTime{ 0 };
@@ -35,5 +36,6 @@ namespace DontLaugh
 
 		SDL_Window* m_Window{ nullptr };
 		SDL_Renderer* m_Renderer{ nullptr };
+		SDL_Texture* m_PlayerTex{ nullptr };
 	};
 }
