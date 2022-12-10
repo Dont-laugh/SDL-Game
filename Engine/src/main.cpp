@@ -5,7 +5,7 @@ DontLaugh::Game* g_Game = nullptr;
 int main(int arg, char* argv[])
 {
 	g_Game = new DontLaugh::Game();
-	g_Game->Init("2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false);
+	g_Game->Init("2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 720, 720, false);
 
 	while (g_Game->IsRunning())
 	{

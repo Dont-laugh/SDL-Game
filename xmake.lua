@@ -33,6 +33,6 @@ target "Engine"
     set_objectdir "intermediate/obj"
 
     after_build(function()
-        os.cp("Engine/assets/player.png", path.join(target:targetdir(), "assets/player.png"))
+        os.cp("Engine/assets", "intermediate/binary")
     end)
 target_end()
