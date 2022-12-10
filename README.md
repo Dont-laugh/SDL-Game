@@ -42,3 +42,22 @@ Press y to allow XMake to install dependencies. Now you will find a new folder n
 
 #### 2.2.2 Mac OS
 
+On Mac OS, you may encounter the following permission denied problem:
+
+![mac-perssion](image/Mac-permission.png)
+
+Run the `chmod` command first of all is very helpful:
+
+```shell
+sudo chmod -R 777 ./
+```
+
+Afterwards, run file _build_macos.sh_ at repository root directory:
+
+```shell
+./build_macos.sh
+```
+
+Similarly, type `y` to allow downing dependency:
+
+![img.png](image/Mac-build.png)
