@@ -4,9 +4,11 @@
 .idea/
 .clion/
 .xmake/
+SDL-Game.build/
 intermediate/
 build/
 vsxmake**/
+Testing/
 
 # Windows
 *.sln
@@ -20,5 +22,6 @@ vsxmake**/
 *.xcodeproj
 
 # CMake files
+.cmake/
 CMake**
 cmake_install.cmake
