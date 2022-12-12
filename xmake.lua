@@ -1,5 +1,5 @@
 set_project "SDL-Game"
-set_version "0.1.1"
+set_version "0.1"
 set_languages "c++17"
 
 add_rules("mode.debug", "mode.release")
