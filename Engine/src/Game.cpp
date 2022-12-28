@@ -4,13 +4,17 @@
 
 namespace DontLaugh
 {
-	const char* windowTitle;
+	const char *windowTitle;
+	SDL_Rect srcR, dstR;
+
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval,
+							 std::stringstream &stream, SDL_Window *window);
 
 	Game::Game()
 	{
 	}
 
-	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
+	Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
 		Init(title, xPos, yPos, width, height, fullScreen);
 	}
@@ -20,7 +24,7 @@ namespace DontLaugh
 		Clean();
 	}
 
-	void Game::Init(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
+	void Game::Init(const char *title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
 		if (m_IsRunning)
 			return;
@@ -49,7 +53,7 @@ namespace DontLaugh
 			SDL_Log("SDL renderer created.");
 		}
 
-		SDL_Surface* tmpSurface = IMG_Load("assets/player.png");
+		SDL_Surface *tmpSurface = IMG_Load("assets/player.png");
 		m_PlayerTex = SDL_CreateTextureFromSurface(m_Renderer, tmpSurface);
 		SDL_FreeSurface(tmpSurface);
 
@@ -58,6 +62,9 @@ namespace DontLaugh
 
 		m_TitleStream.setf(std::ios::fixed);
 		m_TitleStream.precision(1);
+
+		dstR.h = 64;
+		dstR.w = 64;
 	}
 
 	void Game::HandleEvents()
@@ -78,18 +85,26 @@ namespace DontLaugh
 	void Game::Update()
 	{
 		++m_FrameCount;
+		dstR.x = m_FrameCount / 50;
+
+		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, s_FpsInterval, m_TitleStream, m_Window);
+	}
+
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval,
+							 std::stringstream &stream, SDL_Window *window)
+	{
 		Uint64 currTime = SDL_GetTicks();
 
-		if (currTime - m_LastTime > s_FpsInterval)
+		if (currTime - lastTime > fpsInterval)
 		{
-			float fps = (m_FrameCount - m_LastCount) * 1000.0f / (currTime - m_LastTime);
+			float fps = (frameCount - lastCount) * 1000.0f / (currTime - lastTime);
 
-			m_TitleStream.str("");
-			m_TitleStream << windowTitle << " (FPS: " << fps << ")";
-			SDL_SetWindowTitle(m_Window, m_TitleStream.str().c_str());
+			stream.str("");
+			stream << windowTitle << " (FPS: " << fps << ")";
+			SDL_SetWindowTitle(window, stream.str().c_str());
 
-			m_LastCount = m_FrameCount;
-			m_LastTime = currTime;
+			lastCount = frameCount;
+			lastTime = currTime;
 		}
 	}
 
@@ -97,7 +112,7 @@ namespace DontLaugh
 	{
 		SDL_RenderClear(m_Renderer);
 		// Add stuff to render
-		SDL_RenderCopy(m_Renderer, m_PlayerTex, nullptr, nullptr);
+		SDL_RenderCopy(m_Renderer, m_PlayerTex, nullptr, &dstR);
 		SDL_RenderPresent(m_Renderer);
 	}
 
