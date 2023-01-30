@@ -1,18 +1,16 @@
 #include <iostream>
 
 #include "Game.hpp"
+#include "TextureManager.hpp"
 
 namespace DontLaugh
 {
-	const char *windowTitle;
-	SDL_Rect srcR, dstR;
+	static const char *windowTitle;
+	static SDL_Rect dstR;
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval,
-							 std::stringstream &stream, SDL_Window *window);
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window *window);
 
-	Game::Game()
-	{
-	}
+	Game::Game() = default;
 
 	Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
@@ -53,9 +51,7 @@ namespace DontLaugh
 			SDL_Log("SDL renderer created.");
 		}
 
-		SDL_Surface *tmpSurface = IMG_Load("assets/player.png");
-		m_PlayerTex = SDL_CreateTextureFromSurface(m_Renderer, tmpSurface);
-		SDL_FreeSurface(tmpSurface);
+		m_PlayerTex = TextureManager::LoadTexture("assets/player.png", m_Renderer);
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -74,24 +70,19 @@ namespace DontLaugh
 
 		switch (evt.type)
 		{
-		case SDL_QUIT:
-			m_IsRunning = false;
-			break;
-		default:
-			break;
+			case SDL_QUIT: m_IsRunning = false;
+				break;
+			default: break;
 		}
 	}
 
 	void Game::Update()
 	{
-		++m_FrameCount;
-		dstR.x = m_FrameCount / 50;
-
+		dstR.x = (int) ++m_FrameCount;
 		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, s_FpsInterval, m_TitleStream, m_Window);
 	}
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval,
-							 std::stringstream &stream, SDL_Window *window)
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window *window)
 	{
 		Uint64 currTime = SDL_GetTicks();
 
