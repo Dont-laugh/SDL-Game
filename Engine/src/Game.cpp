@@ -1,28 +1,14 @@
 #include <iostream>
 
 #include "Game.hpp"
-#include "TextureManager.hpp"
 
 namespace DontLaugh
 {
-	static const char *windowTitle;
-	static SDL_Rect dstR;
+	static const char* windowTitle;
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window *window);
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window* window);
 
-	Game::Game() = default;
-
-	Game::Game(const char *title, int xPos, int yPos, int width, int height, bool fullScreen)
-	{
-		Init(title, xPos, yPos, width, height, fullScreen);
-	}
-
-	Game::~Game()
-	{
-		Clean();
-	}
-
-	void Game::Init(const char *title, int xPos, int yPos, int width, int height, bool fullScreen)
+	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
 		if (m_IsRunning)
 			return;
@@ -51,16 +37,19 @@ namespace DontLaugh
 			SDL_Log("SDL renderer created.");
 		}
 
-		m_PlayerTex = TextureManager::LoadTexture("assets/player.png", m_Renderer);
+		m_Player = new GameObject("assets/Player.png", m_Renderer, 0, 0);
+		m_Enemy = new GameObject("assets/Enemy.png", m_Renderer, 150, 100);
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
 
 		m_TitleStream.setf(std::ios::fixed);
 		m_TitleStream.precision(1);
+	}
 
-		dstR.h = 64;
-		dstR.w = 64;
+	Game::~Game()
+	{
+		Clean();
 	}
 
 	void Game::HandleEvents()
@@ -78,11 +67,12 @@ namespace DontLaugh
 
 	void Game::Update()
 	{
-		dstR.x = (int) ++m_FrameCount;
+		m_Player->Update();
+		m_Enemy->Update();
 		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, s_FpsInterval, m_TitleStream, m_Window);
 	}
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window *window)
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window* window)
 	{
 		Uint64 currTime = SDL_GetTicks();
 
@@ -102,8 +92,8 @@ namespace DontLaugh
 	void Game::Render()
 	{
 		SDL_RenderClear(m_Renderer);
-		// Add stuff to render
-		SDL_RenderCopy(m_Renderer, m_PlayerTex, nullptr, &dstR);
+		m_Player->Render();
+		m_Enemy->Render();
 		SDL_RenderPresent(m_Renderer);
 	}
 

@@ -5,16 +5,16 @@
 #include "SDL.h"
 #include "SDL_image.h"
 
+#include "GameObject.h"
+
 namespace DontLaugh
 {
 	class Game
 	{
 	public:
-		Game();
 		Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen);
 		~Game();
 
-		void Init(const char* title, int xPos, int yPos, int width, int height, bool fullScreen);
 		void HandleEvents();
 		void Update();
 		void Render();
@@ -23,8 +23,14 @@ namespace DontLaugh
 		inline bool IsRunning() { return m_IsRunning; }
 
 	private:
+		#pragma region Gameplay
+
 		bool m_IsRunning{ false };
 		bool m_IsCleaned{ false };
+		GameObject* m_Player{ nullptr };
+		GameObject* m_Enemy{ nullptr };
+
+		#pragma endregion Gameplay
 
 		#pragma region FPS
 
