@@ -5,6 +5,7 @@
 namespace DontLaugh
 {
 	static const char* windowTitle;
+	SDL_Renderer* Game::m_Renderer = nullptr;
 
 	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window* window);
 
@@ -30,15 +31,16 @@ namespace DontLaugh
 			SDL_Log("SDL window created.");
 		}
 
-		m_Renderer = SDL_CreateRenderer(m_Window, -1, 0);
-		if (m_Renderer)
+		Game::m_Renderer = SDL_CreateRenderer(m_Window, -1, 0);
+		if (Game::m_Renderer)
 		{
-			SDL_SetRenderDrawColor(m_Renderer, 151, 255, 255, 200);
-			SDL_Log("SDL renderer created.");
+			SDL_SetRenderDrawColor(Game::m_Renderer, 151, 255, 255, 200);
+			SDL_Log("SDL m_Renderer created.");
 		}
 
-		m_Player = new GameObject("assets/Player.png", m_Renderer, 0, 0);
-		m_Enemy = new GameObject("assets/Enemy.png", m_Renderer, 150, 100);
+		m_Player = new GameObject("assets/Player.png", 0, 0);
+		m_Enemy = new GameObject("assets/Enemy.png", 150, 100);
+		m_LevelMap = new Map();
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -59,9 +61,11 @@ namespace DontLaugh
 
 		switch (evt.type)
 		{
-			case SDL_QUIT: m_IsRunning = false;
+			case SDL_QUIT:
+				m_IsRunning = false;
 				break;
-			default: break;
+			default:
+				break;
 		}
 	}
 
@@ -92,8 +96,11 @@ namespace DontLaugh
 	void Game::Render()
 	{
 		SDL_RenderClear(m_Renderer);
+
+		m_LevelMap->Render();
 		m_Player->Render();
 		m_Enemy->Render();
+
 		SDL_RenderPresent(m_Renderer);
 	}
 

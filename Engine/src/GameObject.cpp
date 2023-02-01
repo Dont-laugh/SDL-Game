@@ -1,38 +1,40 @@
 #include "GameObject.h"
 #include "TextureManager.h"
+#include "Game.hpp"
+#include "Map.h"
 
 namespace DontLaugh
 {
-	GameObject::GameObject(const char* texturePath, SDL_Renderer* renderer, int x, int y)
+	GameObject::GameObject(const char* texturePath, int x, int y)
 	{
-		this->renderer = renderer;
-		this->texture = TextureManager::LoadTexture(texturePath, renderer);
-		this->xPos = x;
-		this->yPos = y;
+		this->m_Texture = TextureManager::LoadTexture(texturePath);
+		this->m_XPos = x;
+		this->m_YPos = y;
 	}
 
 	GameObject::~GameObject()
 	{
+		TextureManager::DestroyTexture(m_Texture);
 	}
 
 	void GameObject::Update()
 	{
-		xPos++;
-		yPos++;
+		m_XPos++;
+		m_YPos++;
 
-		srcRect.x = 0;
-		srcRect.y = 0;
-		srcRect.w = 64;
-		srcRect.h = 64;
+		m_Src.x = 0;
+		m_Src.y = 0;
+		m_Src.w = Map::unit;
+		m_Src.h = Map::unit;
 
-		dstRect.x = xPos;
-		dstRect.y = yPos;
-		dstRect.w = srcRect.w * 2;
-		dstRect.h = srcRect.h * 2;
+		m_Dest.x = m_XPos;
+		m_Dest.y = m_YPos;
+		m_Dest.w = m_Src.w * 2;
+		m_Dest.h = m_Src.h * 2;
 	}
 
 	void GameObject::Render()
 	{
-		SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+		TextureManager::DrawTexture(m_Texture, m_Src, m_Dest);
 	}
 }
