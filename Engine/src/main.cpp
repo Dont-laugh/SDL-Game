@@ -1,7 +1,5 @@
 #include "Game.hpp"
 
-DontLaugh::Game* g_Game = nullptr;
-
 int main(int arg, char* argv[])
 {
 	constexpr int Fps = 60;  // 目标帧率
@@ -9,15 +7,17 @@ int main(int arg, char* argv[])
 
 	Uint32 frameStart, frameTime;
 
-	g_Game = new DontLaugh::Game("2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 720, 720, false);
+	auto game = new DontLaugh::Game(
+		"2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 720, 720, false
+	);
 
-	while (g_Game->IsRunning())
+	while (game->IsRunning())
 	{
 		frameStart = SDL_GetTicks();
 
-		g_Game->HandleEvents();
-		g_Game->Update();
-		g_Game->Render();
+		game->HandleEvents();
+		game->Update();
+		game->Render();
 
 		frameTime = SDL_GetTicks() - frameStart;
 
@@ -27,8 +27,8 @@ int main(int arg, char* argv[])
 		}
 	}
 
-	g_Game->Clean();
-	delete g_Game;
+	game->Clean();
+	delete game;
 
 	return 0;
 }

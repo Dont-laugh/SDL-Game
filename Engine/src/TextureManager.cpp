@@ -1,4 +1,4 @@
-#include "TextureManager.h"
+#include "TextureManager.hpp"
 #include "Game.hpp"
 
 namespace DontLaugh

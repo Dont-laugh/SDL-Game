@@ -4,8 +4,10 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
-#include "GameObject.h"
-#include "Map.h"
+#include "GameObject.hpp"
+#include "Map.hpp"
+#include "ECS.hpp"
+#include "Components.hpp"
 
 namespace DontLaugh
 {
@@ -37,7 +39,10 @@ namespace DontLaugh
 
 		#pragma region FPS
 
+	public:
 		static const Uint64 s_FpsInterval { 500 };
+
+	private:
 		Uint32 m_FrameCount { 0 };
 		Uint32 m_LastCount { 0 };
 		Uint64 m_LastTime { 0 };
@@ -49,6 +54,13 @@ namespace DontLaugh
 
 		static SDL_Renderer* m_Renderer;
 		SDL_Window* m_Window { nullptr };
+
+		#pragma endregion
+
+		#pragma region ECS
+
+		EcsManager* m_Manager { nullptr };
+		Entity* m_PlayerEntity { nullptr };
 
 		#pragma endregion
 	};

@@ -5,12 +5,11 @@ set_languages "c++17"
 add_rules("mode.debug", "mode.release")
 set_defaultmode("debug")
 set_defaultarchs("macosx|arm64", "windows|x64")
+add_requires("libsdl 2.x", "libsdl_image 2.x")
 
 if is_plat("windows") then
     add_rules "plugin.vsxmake.autoupdate"
 end
-
-add_requires("libsdl 2.x", "libsdl_image 2.x")
 
 if is_mode("debug") then
     add_defines "DEBUG"

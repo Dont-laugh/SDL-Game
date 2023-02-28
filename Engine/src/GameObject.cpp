@@ -1,7 +1,6 @@
-#include "GameObject.h"
-#include "TextureManager.h"
-#include "Game.hpp"
-#include "Map.h"
+#include "GameObject.hpp"
+#include "TextureManager.hpp"
+#include "Map.hpp"
 
 namespace DontLaugh
 {

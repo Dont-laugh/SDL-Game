@@ -7,7 +7,7 @@ namespace DontLaugh
 	static const char* windowTitle;
 	SDL_Renderer* Game::m_Renderer = nullptr;
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window* window);
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, std::stringstream &stream, SDL_Window* window);
 
 	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
@@ -42,6 +42,10 @@ namespace DontLaugh
 		m_Enemy = new GameObject("assets/Enemy.png", 150, 100);
 		m_LevelMap = new Map();
 
+		m_Manager = new EcsManager();
+		m_PlayerEntity = m_Manager->AddEntity();
+		m_PlayerEntity->AddComponent<PositionComponent>();
+
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
 
@@ -73,14 +77,16 @@ namespace DontLaugh
 	{
 		m_Player->Update();
 		m_Enemy->Update();
-		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, s_FpsInterval, m_TitleStream, m_Window);
+		m_Manager->Update();
+		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, m_TitleStream, m_Window);
 	}
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, Uint64 fpsInterval, std::stringstream &stream, SDL_Window* window)
+	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, std::stringstream &stream, SDL_Window* window)
 	{
+		++frameCount;
 		Uint64 currTime = SDL_GetTicks();
 
-		if (currTime - lastTime > fpsInterval)
+		if (currTime - lastTime > Game::s_FpsInterval)
 		{
 			float fps = (frameCount - lastCount) * 1000.0f / (currTime - lastTime);
 
@@ -113,8 +119,14 @@ namespace DontLaugh
 		SDL_DestroyWindow(m_Window);
 		SDL_Quit();
 
+		delete m_Player;
+		delete m_Enemy;
+		delete m_LevelMap;
+		delete m_PlayerEntity;
+		delete m_Manager;
+
 		m_IsCleaned = true;
 
-		SDL_Log("Game cleaned.");
+		SDL_Log("Game has been cleaned.");
 	}
 } // namespace DontLaugh

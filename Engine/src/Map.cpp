@@ -1,5 +1,5 @@
-#include "Map.h"
-#include "TextureManager.h"
+#include "Map.hpp"
+#include "TextureManager.hpp"
 
 namespace DontLaugh
 {
