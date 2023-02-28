@@ -26,8 +26,6 @@ namespace DontLaugh
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	};
 
-	const int Map::unit = 32;
-
 	Map::Map()
 	{
 		m_Dirt = TextureManager::LoadTexture("assets/Dirt.png");

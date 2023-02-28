@@ -14,7 +14,7 @@ namespace DontLaugh
 		void Render();
 
 	public:
-		const static int unit;
+		constexpr static int unit = 32;
 
 	private:
 		SDL_Rect m_Src;

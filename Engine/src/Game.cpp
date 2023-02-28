@@ -38,13 +38,16 @@ namespace DontLaugh
 			SDL_Log("SDL m_Renderer created.");
 		}
 
-		m_Player = new GameObject("assets/Player.png", 0, 0);
-		m_Enemy = new GameObject("assets/Enemy.png", 150, 100);
 		m_LevelMap = new Map();
-
 		m_Manager = new EcsManager();
-		m_PlayerEntity = m_Manager->AddEntity();
-		m_PlayerEntity->AddComponent<PositionComponent>();
+
+		m_Player = m_Manager->AddEntity();
+		m_Player->AddComponent<TransformComponent>(0, 0);
+		m_Player->AddComponent<SpriteComponent>("assets/Player.png");
+
+		m_Enemy = m_Manager->AddEntity();
+		m_Enemy->AddComponent<TransformComponent>(250, 150);
+		m_Enemy->AddComponent<SpriteComponent>("assets/Enemy.png");
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -75,9 +78,9 @@ namespace DontLaugh
 
 	void Game::Update()
 	{
-		m_Player->Update();
-		m_Enemy->Update();
+		m_Manager->Refresh();
 		m_Manager->Update();
+		m_Player->GetComponent<TransformComponent>().position.Add(Vector2(5, 0));
 		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, m_TitleStream, m_Window);
 	}
 
@@ -104,8 +107,7 @@ namespace DontLaugh
 		SDL_RenderClear(m_Renderer);
 
 		m_LevelMap->Render();
-		m_Player->Render();
-		m_Enemy->Render();
+		m_Manager->Render();
 
 		SDL_RenderPresent(m_Renderer);
 	}
@@ -122,7 +124,6 @@ namespace DontLaugh
 		delete m_Player;
 		delete m_Enemy;
 		delete m_LevelMap;
-		delete m_PlayerEntity;
 		delete m_Manager;
 
 		m_IsCleaned = true;

@@ -45,22 +45,26 @@ namespace DontLaugh
 
 		virtual ~Component() = default;
 
-	public:
-		Entity* owner;
+		inline void SetOwner(Entity* entity) { m_Owner = entity; }
+
+	protected:
+		Entity* m_Owner;
 	};
 
 	class Entity
 	{
 	public:
-		void Update()
+		inline void Update() const
 		{
 			for (auto &com: m_Components)
 				com->Update();
+		}
+
+		inline void Draw() const
+		{
 			for (auto &com: m_Components)
 				com->Render();
 		}
-
-		void Draw() { }
 
 		inline bool IsActive() const { return m_Active; }
 
@@ -76,7 +80,7 @@ namespace DontLaugh
 		T &AddComponent(TArgs &&...args)
 		{
 			T* comp { new T(std::forward<TArgs>(args)...) };
-			comp->owner = this;
+			comp->SetOwner(this);
 
 			std::unique_ptr<Component> uPtr { comp };
 			m_Components.emplace_back(std::move(uPtr));

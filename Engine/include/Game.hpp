@@ -6,8 +6,7 @@
 #include "SDL_image.h"
 #include "GameObject.hpp"
 #include "Map.hpp"
-#include "ECS.hpp"
-#include "Components.hpp"
+#include "ECS/Components.h"
 
 namespace DontLaugh
 {
@@ -31,9 +30,10 @@ namespace DontLaugh
 
 		bool m_IsRunning { false };
 		bool m_IsCleaned { false };
-		GameObject* m_Player { nullptr };
-		GameObject* m_Enemy { nullptr };
 		Map* m_LevelMap { nullptr };
+		EcsManager* m_Manager { nullptr };
+		Entity* m_Player { nullptr };
+		Entity* m_Enemy { nullptr };
 
 		#pragma endregion Gameplay
 
@@ -54,13 +54,6 @@ namespace DontLaugh
 
 		static SDL_Renderer* m_Renderer;
 		SDL_Window* m_Window { nullptr };
-
-		#pragma endregion
-
-		#pragma region ECS
-
-		EcsManager* m_Manager { nullptr };
-		Entity* m_PlayerEntity { nullptr };
 
 		#pragma endregion
 	};
