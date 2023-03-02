@@ -24,13 +24,12 @@ namespace DontLaugh
 
 		~SpriteComponent() override
 		{
-			delete m_Transform;
-			delete m_Texture;
+			TextureManager::DestroyTexture(m_Texture);
 		}
 
 		void Init() override
 		{
-			m_Transform = &(m_Owner->GetComponent<TransformComponent>());
+			m_Transform = GetOwnerComponent<TransformComponent>();
 			m_Src.x = m_Src.y = 0;
 			m_Src.w = m_Src.h = Map::unit;
 			m_Dest.w = m_Dest.h = 2 * Map::unit;

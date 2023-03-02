@@ -8,7 +8,7 @@ int main(int arg, char* argv[])
 	Uint32 frameStart, frameTime;
 
 	auto game = new DontLaugh::Game(
-		"2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 720, 720, false
+		"2D Game Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, false
 	);
 
 	while (game->IsRunning())

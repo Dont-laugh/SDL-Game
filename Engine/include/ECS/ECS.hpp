@@ -48,6 +48,14 @@ namespace DontLaugh
 		inline void SetOwner(Entity* entity) { m_Owner = entity; }
 
 	protected:
+		template<typename T>
+		inline T* GetOwnerComponent()
+		{
+			static_assert(std::is_base_of<Component, T>::value, "T must be subclass of Component");
+			return &(m_Owner->GetComponent<T>());
+		}
+
+	protected:
 		Entity* m_Owner;
 	};
 
@@ -56,13 +64,13 @@ namespace DontLaugh
 	public:
 		inline void Update() const
 		{
-			for (auto &com: m_Components)
+			for (auto& com: m_Components)
 				com->Update();
 		}
 
 		inline void Draw() const
 		{
-			for (auto &com: m_Components)
+			for (auto& com: m_Components)
 				com->Render();
 		}
 
@@ -77,7 +85,7 @@ namespace DontLaugh
 		}
 
 		template<typename T, typename... TArgs>
-		T &AddComponent(TArgs &&...args)
+		T& AddComponent(TArgs&& ...args)
 		{
 			T* comp { new T(std::forward<TArgs>(args)...) };
 			comp->SetOwner(this);
@@ -94,7 +102,7 @@ namespace DontLaugh
 		}
 
 		template<typename T>
-		inline T &GetComponent() const
+		inline T& GetComponent() const
 		{
 			Component* ptr = m_ComponentArray[GetComponentTypeID<T>()];
 			return *static_cast<T*>(ptr);
@@ -113,35 +121,33 @@ namespace DontLaugh
 	public:
 		~EcsManager()
 		{
-			for (auto &en: m_Entities)
-			{
+			for (auto& en: m_Entities)
 				en.release();
-			}
 		}
 
 		void Update()
 		{
-			for (auto &en: m_Entities)
+			for (auto& en: m_Entities)
 				en->Update();
 		}
 
 		void Render()
 		{
-			for (auto &en: m_Entities)
+			for (auto& en: m_Entities)
 				en->Draw();
 		}
 
 		void Refresh()
 		{
 			m_Entities.erase(
-					std::remove_if(
-							std::begin(m_Entities), std::end(m_Entities),
-							[](const std::unique_ptr<Entity> &entity)
-							{
-								return !entity->IsActive();
-							}
-					),
-					std::end(m_Entities)
+				std::remove_if(
+					m_Entities.begin(), m_Entities.end(),
+					[](const std::unique_ptr<Entity>& entity)
+					{
+						return !entity->IsActive();
+					}
+				),
+				std::end(m_Entities)
 			);
 		}
 

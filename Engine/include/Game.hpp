@@ -40,7 +40,7 @@ namespace DontLaugh
 		#pragma region FPS
 
 	public:
-		static const Uint64 s_FpsInterval { 500 };
+		constexpr static Uint64 FPS_INTERVAL { 500 };
 
 	private:
 		Uint32 m_FrameCount { 0 };
@@ -53,6 +53,7 @@ namespace DontLaugh
 		#pragma region SDL
 
 		static SDL_Renderer* m_Renderer;
+		SDL_Event* m_Event { nullptr };
 		SDL_Window* m_Window { nullptr };
 
 		#pragma endregion

@@ -7,7 +7,7 @@ namespace DontLaugh
 	static const char* windowTitle;
 	SDL_Renderer* Game::m_Renderer = nullptr;
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, std::stringstream &stream, SDL_Window* window);
+	static void CalculateFPS(Uint64& lastTime, Uint32& frameCount, Uint32& lastCount, std::stringstream& stream, SDL_Window* window);
 
 	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
@@ -40,14 +40,17 @@ namespace DontLaugh
 
 		m_LevelMap = new Map();
 		m_Manager = new EcsManager();
+		m_Event = new SDL_Event();
 
-		m_Player = m_Manager->AddEntity();
-		m_Player->AddComponent<TransformComponent>(0, 0);
-		m_Player->AddComponent<SpriteComponent>("assets/Player.png");
+//		m_Player = m_Manager->AddEntity();
+//		m_Player->AddComponent<TransformComponent>(0, 0);
+//		m_Player->AddComponent<SpriteComponent>("assets/Player.png");
+//		m_Player->AddComponent<KeyboardComponent>(m_Event);
 
 		m_Enemy = m_Manager->AddEntity();
-		m_Enemy->AddComponent<TransformComponent>(250, 150);
+		m_Enemy->AddComponent<TransformComponent>(450, 150);
 		m_Enemy->AddComponent<SpriteComponent>("assets/Enemy.png");
+		m_Enemy->AddComponent<KeyboardComponent>(m_Event);
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -63,10 +66,9 @@ namespace DontLaugh
 
 	void Game::HandleEvents()
 	{
-		SDL_Event evt;
-		SDL_PollEvent(&evt);
+		SDL_PollEvent(m_Event);
 
-		switch (evt.type)
+		switch (m_Event->type)
 		{
 			case SDL_QUIT:
 				m_IsRunning = false;
@@ -78,18 +80,20 @@ namespace DontLaugh
 
 	void Game::Update()
 	{
-		m_Manager->Refresh();
-		m_Manager->Update();
-		m_Player->GetComponent<TransformComponent>().position.Add(Vector2(5, 0));
+		if (m_Manager)
+		{
+			m_Manager->Refresh();
+			m_Manager->Update();
+		}
 		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, m_TitleStream, m_Window);
 	}
 
-	static void CalculateFPS(Uint64 &lastTime, Uint32 &frameCount, Uint32 &lastCount, std::stringstream &stream, SDL_Window* window)
+	static void CalculateFPS(Uint64& lastTime, Uint32& frameCount, Uint32& lastCount, std::stringstream& stream, SDL_Window* window)
 	{
 		++frameCount;
 		Uint64 currTime = SDL_GetTicks();
 
-		if (currTime - lastTime > Game::s_FpsInterval)
+		if (currTime - lastTime > Game::FPS_INTERVAL)
 		{
 			float fps = (frameCount - lastCount) * 1000.0f / (currTime - lastTime);
 
@@ -106,8 +110,8 @@ namespace DontLaugh
 	{
 		SDL_RenderClear(m_Renderer);
 
-		m_LevelMap->Render();
-		m_Manager->Render();
+		if (m_LevelMap) m_LevelMap->Render();
+		if (m_Manager) m_Manager->Render();
 
 		SDL_RenderPresent(m_Renderer);
 	}
@@ -123,6 +127,7 @@ namespace DontLaugh
 
 		delete m_Player;
 		delete m_Enemy;
+		delete m_Event;
 		delete m_LevelMap;
 		delete m_Manager;
 

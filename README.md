@@ -38,13 +38,13 @@ Double click the batch file _build_windows.bat_. You will see like this:
 
 ![win-build](image/Windows-build.png)
 
-Press y to allow XMake to install dependencies. Now you will find a new folder named like "vsxmake2022", here locates sln and vcxproj files.
+Press y to allow XMake to install dependencies. Now you will find a new folder named like "vsxmake2022" (depends on your Visual Studio version), here locates sln and vcxproj files.
 
 #### 2.2.2 Mac OS
 
 On Mac OS, you may encounter the following permission denied problem:
 
-![mac-perssion](image/Mac-permission.png)
+<img src="image/Mac-permission.png" alt="mac-perssion" style="zoom:55%;" />
 
 Run the `chmod` command first of all is very helpful:
 
@@ -61,3 +61,15 @@ Afterwards, run file _build_macos.sh_ at repository root directory:
 Similarly, type `y` to allow downing dependency:
 
 ![img.png](image/Mac-build.png)
+
+Now you will find 
+
+### 2.3 Run with XMake
+
+This method is as simple as running the following commands:
+
+```shell
+xmake build
+xmake run
+```
+
