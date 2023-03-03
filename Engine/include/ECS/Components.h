@@ -4,3 +4,4 @@
 #include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "KeyboardComponent.hpp"
+#include "ColliderComponent.hpp"

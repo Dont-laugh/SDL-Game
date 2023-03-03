@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "ECS.hpp"
 #include "SDL.h"
 #include "Game.hpp"
@@ -15,7 +13,7 @@ namespace DontLaugh
 
 		void Init() override
 		{
-			m_Transform = GetOwnerComponent<TransformComponent>();
+			m_Transform = EnsureOwnerComponent<TransformComponent>();
 		}
 
 		void Update() override

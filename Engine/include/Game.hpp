@@ -7,6 +7,7 @@
 #include "GameObject.hpp"
 #include "Map.hpp"
 #include "ECS/Components.h"
+#include "Collision.hpp"
 
 namespace DontLaugh
 {

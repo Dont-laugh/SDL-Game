@@ -29,16 +29,18 @@ namespace DontLaugh
 
 		void Init() override
 		{
-			m_Transform = GetOwnerComponent<TransformComponent>();
+			m_Transform = EnsureOwnerComponent<TransformComponent>();
 			m_Src.x = m_Src.y = 0;
-			m_Src.w = m_Src.h = Map::unit;
-			m_Dest.w = m_Dest.h = 2 * Map::unit;
+			m_Src.w = m_Transform->width;
+			m_Src.h = m_Transform->height;
 		}
 
 		void Update() override
 		{
 			m_Dest.x = static_cast<int>(m_Transform->position.x);
 			m_Dest.y = static_cast<int>(m_Transform->position.y);
+			m_Dest.w = static_cast<int>(m_Transform->width * m_Transform->scale);
+			m_Dest.h = static_cast<int>(m_Transform->height * m_Transform->scale);
 		}
 
 		void Render() override

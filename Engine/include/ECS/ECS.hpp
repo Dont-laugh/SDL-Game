@@ -49,10 +49,12 @@ namespace DontLaugh
 
 	protected:
 		template<typename T>
-		inline T* GetOwnerComponent()
+		inline T* EnsureOwnerComponent()
 		{
 			static_assert(std::is_base_of<Component, T>::value, "T must be subclass of Component");
-			return &(m_Owner->GetComponent<T>());
+			T* comp = &(m_Owner->GetComponent<T>());
+			if (comp) return comp;
+			return &(m_Owner->AddComponent<T>());
 		}
 
 	protected:

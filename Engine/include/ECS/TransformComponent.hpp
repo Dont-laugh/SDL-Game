@@ -11,23 +11,27 @@ namespace DontLaugh
 		Vector2 position;
 		Vector2 velocity;
 		int speed { 3 };
+		float scale { 1 };
+		int height { Map::unit };
+		int width { Map::unit };
 
 		TransformComponent() : position() { }
 
 		TransformComponent(int x, int y) : position(x, y) { }
 
+		TransformComponent(int x, int y, int w, int h) : position(x, y), width(w), height(h) { }
+
+		TransformComponent(int x, int y, int w, int h, float s) : position(x, y), width(w), height(h), scale(s) { }
+
 		void Init() override
 		{
-			position.x = 0;
-			position.y = 0;
 			velocity.x = 0;
 			velocity.y = 0;
 		}
 
 		void Update() override
 		{
-			position.x += velocity.x * speed;
-			position.y += velocity.y * speed;
+			position += velocity * speed;
 		}
 	};
 }

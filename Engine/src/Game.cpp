@@ -52,6 +52,11 @@ namespace DontLaugh
 		m_Enemy->AddComponent<SpriteComponent>("assets/Enemy.png");
 		m_Enemy->AddComponent<KeyboardComponent>(m_Event);
 
+		auto wall = m_Manager->AddEntity();
+		wall->AddComponent<TransformComponent>(300, 300, 20, 300);
+		wall->AddComponent<SpriteComponent>("assets/dirt.png");
+		wall->AddComponent<ColliderComponent>("wall");
+
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
 
