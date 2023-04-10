@@ -35,6 +35,7 @@ namespace DontLaugh
 		EcsManager* m_Manager { nullptr };
 		Entity* m_Player { nullptr };
 		Entity* m_Enemy { nullptr };
+		Entity* m_Wall { nullptr };
 
 		#pragma endregion Gameplay
 

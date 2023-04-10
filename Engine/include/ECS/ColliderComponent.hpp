@@ -9,6 +9,9 @@ namespace DontLaugh
 	class ColliderComponent : public Component
 	{
 	public:
+		SDL_Rect collideZone;
+
+	public:
 		ColliderComponent(const char* tag) : m_Tag(tag) { }
 
 		void Init() override
@@ -18,15 +21,14 @@ namespace DontLaugh
 
 		void Update() override
 		{
-			m_CollideZone.x = static_cast<int>(m_Transform->position.x);
-			m_CollideZone.y = static_cast<int>(m_Transform->position.y);
-			m_CollideZone.w = static_cast<int>(m_Transform->width * m_Transform->scale);
-			m_CollideZone.h = static_cast<int>(m_Transform->height * m_Transform->scale);
+			collideZone.x = static_cast<int>(m_Transform->position.x);
+			collideZone.y = static_cast<int>(m_Transform->position.y);
+			collideZone.w = static_cast<int>(m_Transform->width * m_Transform->scale);
+			collideZone.h = static_cast<int>(m_Transform->height * m_Transform->scale);
 		}
 
 	private:
 		TransformComponent* m_Transform;
-		SDL_Rect m_CollideZone;
 		std::string m_Tag;
 	};
 }

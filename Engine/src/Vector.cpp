@@ -104,8 +104,10 @@ namespace DontLaugh
 
 	std::ostream& operator <<(std::ostream& stream, const Vector2& vec)
 	{
+		long long prev = stream.precision();
 		stream.precision(1);
 		stream << "(" << vec.x << ", " << vec.y << ")";
+		stream.precision(prev);
 		return stream;
 	}
 }

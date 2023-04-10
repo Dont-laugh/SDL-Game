@@ -4,10 +4,11 @@
 
 namespace DontLaugh
 {
+	static void CalculateFPS(Uint64& lastTime, Uint32& frameCount, Uint32& lastCount, std::stringstream& stream, SDL_Window* window);
+	static void CheckCollision(const Entity* player, const Entity* wall);
+
 	static const char* windowTitle;
 	SDL_Renderer* Game::m_Renderer = nullptr;
-
-	static void CalculateFPS(Uint64& lastTime, Uint32& frameCount, Uint32& lastCount, std::stringstream& stream, SDL_Window* window);
 
 	Game::Game(const char* title, int xPos, int yPos, int width, int height, bool fullScreen)
 	{
@@ -42,20 +43,22 @@ namespace DontLaugh
 		m_Manager = new EcsManager();
 		m_Event = new SDL_Event();
 
-//		m_Player = m_Manager->AddEntity();
-//		m_Player->AddComponent<TransformComponent>(0, 0);
-//		m_Player->AddComponent<SpriteComponent>("assets/Player.png");
-//		m_Player->AddComponent<KeyboardComponent>(m_Event);
+		m_Player = m_Manager->AddEntity();
+		m_Player->AddComponent<TransformComponent>(300, 200);
+		m_Player->AddComponent<SpriteComponent>("assets/Player.png");
+		m_Player->AddComponent<KeyboardComponent>(m_Event);
+		m_Player->AddComponent<ColliderComponent>("Player");
 
-		m_Enemy = m_Manager->AddEntity();
-		m_Enemy->AddComponent<TransformComponent>(450, 150);
-		m_Enemy->AddComponent<SpriteComponent>("assets/Enemy.png");
-		m_Enemy->AddComponent<KeyboardComponent>(m_Event);
+//		m_Enemy = m_Manager->AddEntity();
+//		m_Enemy->AddComponent<TransformComponent>(450, 150);
+//		m_Enemy->AddComponent<SpriteComponent>("assets/Enemy.png");
+//		m_Enemy->AddComponent<KeyboardComponent>(m_Event);
+//		m_Enemy->AddComponent<ColliderComponent>("Enemy");
 
-		auto wall = m_Manager->AddEntity();
-		wall->AddComponent<TransformComponent>(300, 300, 20, 300);
-		wall->AddComponent<SpriteComponent>("assets/dirt.png");
-		wall->AddComponent<ColliderComponent>("wall");
+		m_Wall = m_Manager->AddEntity();
+		m_Wall->AddComponent<TransformComponent>(300, 300, 300, 20);
+		m_Wall->AddComponent<SpriteComponent>("assets/Dirt.png");
+		m_Wall->AddComponent<ColliderComponent>("Wall");
 
 		m_LastTime = SDL_GetTicks();
 		m_IsRunning = true;
@@ -90,7 +93,19 @@ namespace DontLaugh
 			m_Manager->Refresh();
 			m_Manager->Update();
 		}
+
+		CheckCollision(m_Player, m_Wall);
 		CalculateFPS(m_LastTime, m_FrameCount, m_LastCount, m_TitleStream, m_Window);
+	}
+
+	static void CheckCollision(const Entity* player, const Entity* wall)
+	{
+		SDL_Rect playerColZone = player->GetComponent<ColliderComponent>().collideZone;
+		SDL_Rect wallColZone = wall->GetComponent<ColliderComponent>().collideZone;
+		if (Collision::AABB(playerColZone, wallColZone))
+		{
+			player->GetComponent<TransformComponent>().velocity * -1;
+		}
 	}
 
 	static void CalculateFPS(Uint64& lastTime, Uint32& frameCount, Uint32& lastCount, std::stringstream& stream, SDL_Window* window)
